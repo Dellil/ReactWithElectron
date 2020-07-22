@@ -1,6 +1,5 @@
 const electron = require("electron");
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow;
+const { app, BrowserWindow, session } = electron;
 const os = require("os");
 const path = require("path");
 const isDev = require("electron-is-dev");
@@ -22,19 +21,15 @@ function createWindow() {
 }
 
 app.on("ready", createWindow);
-app.on("ready", () => {
-	/**
-	 * will be needed to change file directory depends on your OS
-	 */
-    // react
-    BrowserWindow.addDevToolsExtension(
+
+app.on("ready", async () => {
+    await session.defaultSession.loadExtension(
         path.join(
             os.homedir(),
             "AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\fmkadmapgofadopljbjfkapdkoienihi\\4.8.2_0",
         ),
     );
-    // redux
-    BrowserWindow.addDevToolsExtension(
+    await session.defaultSession.loadExtension(
         path.join(
             os.homedir(),
             "AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\lmhkpmbekcpmknklioeibfkpmmfibljd\\2.17.0_0",
